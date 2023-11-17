@@ -25,6 +25,7 @@ import com.example.demo.type.RecruitStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.example.demo.util.geometry.GeometryUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -129,8 +130,17 @@ public class MatchingServiceImpl implements MatchingService {
                     .map(MatchingPreviewDto::fromEntity);
         }
 
-        // 필터링 있으면 쿼리 만들기
+        // 필터링 있으면 필터링 후 반환
         return matchingRepository.searchWithFilter(filterRequestDto, pageable)
+                .map(MatchingPreviewDto::fromEntity);
+    }
+    @Override
+    public Page<MatchingPreviewDto> findCloseMatching(LocationDto locationDto, Double distance, Pageable pageable){
+        Double x = locationDto.getLat();
+        Double y = locationDto.getLon();
+        LocationDto northEast = GeometryUtil.calculate(x, y, distance/2, 45.0);
+        LocationDto southWest = GeometryUtil.calculate(x, y, distance/2, 225.0);
+        return matchingRepository.searchWithin(locationDto, northEast, southWest, pageable)
                 .map(MatchingPreviewDto::fromEntity);
     }
 
