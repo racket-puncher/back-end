@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.demo.util.geometry.GeometryUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -91,6 +92,12 @@ public class MatchingServiceImpl implements MatchingService {
 
         matching.update(Matching.fromDto(matchingDetailRequestDto, siteUser));
         return matchingRepository.save(matching);
+    }
+
+    public void updateImage(Long matchingId, String newImageUrl){
+        Matching matching = validateMatchingGivenId(matchingId);
+        matching.updateImage(newImageUrl);
+        matchingRepository.save(matching);
     }
 
     private void sendNotificationToApplyUser(Long matchingId, SiteUser siteUser, Matching matching,

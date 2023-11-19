@@ -14,4 +14,5 @@ public interface MatchingService {
     Page<MatchingPreviewDto> findCloseMatching(LocationDto locationDto, Double distance, Pageable pageable);
     MatchingDetailResponseDto getDetail(Long matchingId);
     ApplyContents getApplyContents(String email, long matchId) throws JsonProcessingException;
+    void updateImage(Long matchingId, String newImageUrl);
 }

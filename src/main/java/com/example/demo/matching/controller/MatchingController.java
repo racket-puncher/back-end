@@ -21,6 +21,8 @@ import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +52,19 @@ public class MatchingController {
             } catch (IOException exception) {
                 throw new S3UploadFailException();
             }
+        }
+    }
+
+    @PostMapping("{matchingId}/upload-image")
+    public ResponseDto<?> uploadOrUpdateImage(
+            @PathVariable Long matchingId,
+            @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            String newImageUrl = s3Uploader.uploadFile(imageFile);
+            matchingService.updateImage(matchingId, newImageUrl);
+            return ResponseUtil.SUCCESS(newImageUrl);
+        } catch (IOException e) {
+           throw new S3UploadFailException();
         }
     }
 

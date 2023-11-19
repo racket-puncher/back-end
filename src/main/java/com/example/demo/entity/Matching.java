@@ -149,7 +149,7 @@ public class Matching {
     }
 
     // setter 없이 Matching 수정하기 위한 메서드
-    public void update(Matching matching){
+    public void update(Matching matching) {
         this.title = matching.getTitle();
         this.content = matching.getContent();
         this.location = matching.getLocation();
@@ -178,5 +178,9 @@ public class Matching {
 
     public void changeConfirmedNum(int confirmedNum) {
         this.confirmedNum = confirmedNum;
+    }
+
+    public void updateImage(String imageUrl) {
+        this.locationImg = imageUrl;
     }
 }
